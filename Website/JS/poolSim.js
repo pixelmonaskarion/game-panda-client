@@ -1,5 +1,5 @@
 
-
+//custom class for a ball
 class Ball
 {
     constructor(pos, radius)
@@ -18,21 +18,24 @@ INNER_TABLE_WIDTH = 1.42;
 INNER_TABLE_LENGTH = 2.84;
 BALL_DIAMETER = 0.05715;
 
-startingPositions = [
-];
+startingPositions;
 
+//scaling meters up to pixels
 SCALE_FACTOR = 200;
 
 WINDOW_WIDTH = TABLE_LENGTH * SCALE_FACTOR;
 WINDOW_HEIGHT = TABLE_WIDTH * SCALE_FACTOR;
 
+//how much to reduce pixels dragged by mouse to make velocity more reasonable
 DRAG_FACTOR = 0.04;
 
 ballRadius = BALL_DIAMETER * SCALE_FACTOR / 2;
 numBalls = 16;
 balls = [];
 
+//how bouncy the balls are
 RESTITUTION = 0.7;
+//friction coeficient (shoudl change how friction is calculated to make it more realistic)
 FRICTION = 0.9985;
 
 mouseDownPos = createVector();
@@ -68,7 +71,8 @@ function setup()
     {  
         startingPositions[i].add(createVector(0.13 + 0.71 - ((BALL_DIAMETER/2)*Math.sqrt(3)*4), 0.125 + 0.71 - ((BALL_DIAMETER) + BALL_DIAMETER)));
     }
-
+    
+    //setting up the ball colors
     ballColors = [];
     ballColors[0] = ballColors[8] = "#f0fb00";
     ballColors[1] = ballColors[9] = "#1500ff";
@@ -141,6 +145,7 @@ function draw()
     fill("#00ff19");
     rect(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, INNER_TABLE_LENGTH*SCALE_FACTOR, INNER_TABLE_WIDTH * SCALE_FACTOR);
 
+    //adding line from ball showing direction and magnitude
     if (mouseIsDragged == true)
     {
         stroke(255);
@@ -151,6 +156,7 @@ function draw()
 
     for (var i = 0; i < numBalls; i++)
     {
+        //adding friction
         balls[i].vel.mult(FRICTION);
         balls[i].pos.add(balls[i].vel);
         
@@ -168,6 +174,8 @@ function draw()
 
         circle(balls[i].pos.x, balls[i].pos.y, balls[i].radius*2);
 
+
+        //checks if ball is striped, and then adds stripes
         if (i >= 8 && i <= 14)
         {
             fill(255);

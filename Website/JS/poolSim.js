@@ -18,7 +18,7 @@ INNER_TABLE_WIDTH = 1.42;
 INNER_TABLE_LENGTH = 2.84;
 BALL_DIAMETER = 0.05715;
 
-startingPositions;
+var startingPositions;
 
 //scaling meters up to pixels
 SCALE_FACTOR = 200;

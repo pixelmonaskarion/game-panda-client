@@ -38,6 +38,8 @@ FRICTION = 0.9985;
 mouseDownPos = createVector();
 mouseUpPos = createVector();
 mouseIsDragged;
+ballColors;
+
 
 function setup()
 {
@@ -66,6 +68,17 @@ function setup()
     {  
         startingPositions[i].add(createVector(0.13 + 0.71 - ((BALL_DIAMETER/2)*Math.sqrt(3)*4), 0.125 + 0.71 - ((BALL_DIAMETER) + BALL_DIAMETER)));
     }
+
+    ballColors = [];
+    ballColors[0] = ballColors[8] = "#f0fb00";
+    ballColors[1] = ballColors[9] = "#1500ff";
+    ballColors[2] = ballColors[10] = "#ff0e00";
+    ballColors[3] = ballColors[11] = "#70f";
+    ballColors[4] = ballColors[12] = "#ff7000"
+    ballColors[5] = ballColors[13] = "#00bd0b";
+    ballColors[6] = ballColors[14] = "#8e0000";
+    ballColors[7] = "#000000";
+    ballColors[15] = "#ffffff";
 
     createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
     background(0);
@@ -151,7 +164,16 @@ function draw()
 
     for (var i = 0; i < numBalls; i++)
     {
+        fill(ballColors[i]);
+
         circle(balls[i].pos.x, balls[i].pos.y, balls[i].radius*2);
+
+        if (i >= 8 && i <= 14)
+        {
+            fill(255);
+            arc(balls[i].pos.x, balls[i].pos.y, balls[i].radius*2, balls[i].radius*2, 0.5, PI-0.5, OPEN);
+            arc(balls[i].pos.x, balls[i].pos.y, balls[i].radius*2, balls[i].radius*2, 0.5+PI, PI*2-0.5, OPEN);
+        }
     }
 }
 

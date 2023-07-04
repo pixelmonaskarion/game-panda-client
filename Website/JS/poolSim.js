@@ -62,6 +62,8 @@ turnInProgress;
 
 anotherTurn;
 
+popupText;
+
 
 function setup()
 {
@@ -123,6 +125,8 @@ function setup()
 
     anotherTurn = false;
 
+    popupText = "";
+
     createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
     background(0);
 
@@ -176,6 +180,15 @@ function handleWallCollision(ball)
     }
 }
 
+function popup(text)
+{
+    popupText = text;
+
+    setTimeout(function() {
+        popupText = "";
+    }, 1000);
+}
+
 function checkInPocket(ball)
 {
     for (var i = 0; i < pocketPositions.length; i++)
@@ -191,28 +204,35 @@ function checkInPocket(ball)
 
             if (ball.index == 7)
             {
-                player = player1Turn ? "Player 1" : "Player 2";
-                console.log(player + " lost");
+                if ((player1Turn && player1Score < 7) || (!player1Turn && player2Score < 7))
+                {
+                    player = player1Turn ? "Player 1" : "Player 2";
+                    popup(player + " lost");
+                } else
+                {
+                    player = player1Turn ? "Player 1" : "Player 2";
+                    popup(player + " won");
+                }
             }
 
             if (ball.index <= 6 && player1Solid == null && player1Turn)
             {
                 player1Solid = true;
-                console.log("Player 1 is solid");
+                popup("Player 1 is solid");
             } else if (ball.index >= 8 && ball.index <= 14 && player1Solid == null && player1Turn)
             {
                 player1Solid = false;
-                console.log("Player 1 is striped");
+                popup("Player 1 is striped");
             }
 
             if (ball.index <= 6 && player1Solid == null && !player1Turn)
             {
                 player1Solid = false;
-                console.log("Player 1 is striped");
+                popup("Player 1 is striped");
             } else if (ball.index >= 8 && ball.index <= 14 && player1Solid == null && !player1Turn)
             {
                 player1Solid = true;
-                console.log("Player 1 is solid");
+                popup("Player 1 is solid");
             }
 
 
@@ -292,6 +312,9 @@ function endTurn()
 
     anotherTurn = false;
     console.log("turn is over, player1Turn: " + player1Turn);
+
+    turn = player1Turn ? "Player 1" : "Player 2";
+    popup("It is " + turn + "'s turn");
 }
 
 function draw()
@@ -300,6 +323,11 @@ function draw()
     rectMode(CENTER);
     fill("#00ff19");
     rect(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, INNER_TABLE_LENGTH*SCALE_FACTOR, INNER_TABLE_WIDTH * SCALE_FACTOR);
+
+    fill("#ffffff");
+    stroke(0);
+    textAlign(CENTER, CENTER);
+    text(popupText, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
     
     for (var i = 0; i < pocketPositions.length; i++)

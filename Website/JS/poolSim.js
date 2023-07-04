@@ -8,6 +8,8 @@ class Ball
         this.radius = radius;
         this.vel = createVector();
         this.mass = 10;
+        this.inPlay = true;
+        this.index;
     }
 }
 
@@ -19,6 +21,7 @@ INNER_TABLE_LENGTH = 2.84;
 BALL_DIAMETER = 0.05715;
 
 var startingPositions;
+var pocketPositions;
 
 //scaling meters up to pixels
 SCALE_FACTOR = 200;
@@ -36,12 +39,26 @@ balls = [];
 //how bouncy the balls are
 RESTITUTION = 0.7;
 //friction coeficient (shoudl change how friction is calculated to make it more realistic)
-FRICTION = 0.9985;
+FRICTION = 0.99;
+
+//the velocity at which the ball is stopped
+VELOCITY_DEADZONE = 0.05; 
+
+POCKET_SIZE = 0.1; //meters
 
 mouseDownPos = createVector();
 mouseUpPos = createVector();
 mouseIsDragged;
 ballColors;
+
+//score things
+player1Score;
+player2Score;
+
+player1Solid;
+player1Turn;
+
+turnInProgress;
 
 
 function setup()
@@ -84,13 +101,31 @@ function setup()
     ballColors[7] = "#000000";
     ballColors[15] = "#ffffff";
 
+
+    pocketPositions = [
+        createVector(0.13, 0.125),
+        createVector(1.55, 0.125),
+        createVector(3.1 - 0.13, 0.125),
+        createVector(0.13, 1.67 - 0.125),
+        createVector(1.55, 1.67-0.125),
+        createVector(3.1 - 0.13, 1.67-0.125)
+    ];
+
+    player1Score = 0;
+    player2Score = 0;
+
+    player1Turn = true;
+    player1Solid = null;
+
+    turnInProgress = false;
+
     createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
     background(0);
 
     for (i = 0; i < numBalls; i++)
     {
         balls.push(new Ball(p5.Vector.mult(startingPositions[i], SCALE_FACTOR), ballRadius));
-        console.log(balls[i].pos);
+        balls[i].index = i;
     }
 
 
@@ -108,7 +143,6 @@ function handleCollision(ball1, ball2, restitution)
 
 
     var corr = (ball1.radius + ball2.radius - dirLen) / 2.0;
-    console.log(corr);
     ball2.pos.add(p5.Vector.mult(dir, corr));
     ball1.pos.add(p5.Vector.mult(dir, -corr));
 
@@ -138,6 +172,106 @@ function handleWallCollision(ball)
     }
 }
 
+function checkInPocket(ball)
+{
+    for (var i = 0; i < pocketPositions.length; i++)
+    {
+        dis = p5.Vector.sub(p5.Vector.mult(pocketPositions[i], SCALE_FACTOR), ball.pos).mag();
+        //console.log(dis);
+
+        if (dis <= POCKET_SIZE/2*SCALE_FACTOR + ball.radius)
+        {
+            ball.inPlay = false;
+            ball.vel = createVector();
+            console.log("ball pocketed");
+
+            if (ball.index == 7)
+            {
+                player = player1Turn ? "Player 1" : "Player 2";
+                console.log(player + " lost");
+            }
+
+            if (ball.index <= 6 & player1Solid == null && player1Turn)
+            {
+                player1Solid = true;
+                console.log("Player 1 is solid");
+            } else if (ball.index >= 8 && ball.index <= 14 && player1Solid == null && player1Turn)
+            {
+                player1Solid = false;
+                console.log("Player 1 is striped");
+            }
+
+            if (ball.index <= 6 & player1Solid == null && !player1Turn)
+            {
+                player1Solid = false;
+                console.log("Player 1 is striped");
+            } else if (ball.index >= 8 && ball.index <= 14 && player1Solid == null && !player1Turn)
+            {
+                player1Solid = true;
+                console.log("Player 1 is solid");
+            }
+
+            return;
+        }
+    }
+}
+
+function checkScore()
+{
+    player2Score = 0;
+    player1Score = 0;
+
+    if (player1Solid == null)
+        return;
+
+    for (var i = 0; i < numBalls; i++)
+    {
+        if (i <=6 && !balls[i].inPlay)
+        {
+            if (player1Solid)
+            {
+                player1Score++;
+            } else 
+            {
+                player2Score ++;
+            }
+            
+        }
+
+        if (i >=8 && i <= 14 && !balls[i].inPlay)
+        {
+            if (player1Solid)
+            {
+                player2Score++;
+            } else 
+            {
+                player1Score ++;
+            }
+        }
+    }
+}
+
+function checkEndTurn()
+{
+    for (var i = 0; i < numBalls; i ++)
+    {
+        if (balls[i].vel.mag() > 0)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function endTurn()
+{
+    turnInProgress = false;
+
+    player1Turn = !player1Turn;
+    console.log("turn is over, player1Turn: " + player1Turn);
+}
+
 function draw()
 {
     background("#652102");
@@ -145,8 +279,15 @@ function draw()
     fill("#00ff19");
     rect(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, INNER_TABLE_LENGTH*SCALE_FACTOR, INNER_TABLE_WIDTH * SCALE_FACTOR);
 
+    
+    for (var i = 0; i < pocketPositions.length; i++)
+    {
+        fill("#808000");
+        circle(pocketPositions[i].x * SCALE_FACTOR, pocketPositions[i].y * SCALE_FACTOR, POCKET_SIZE * SCALE_FACTOR);
+    }
+
     //adding line from ball showing direction and magnitude
-    if (mouseIsDragged == true)
+    if (mouseIsDragged == true && !turnInProgress)
     {
         stroke(255);
         line(balls[15].pos.x, balls[15].pos.y, balls[15].pos.x + p5.Vector.sub(createVector(mouseX, mouseY), mouseDownPos).x, balls[15].pos.y + p5.Vector.sub(createVector(mouseX, mouseY), mouseDownPos).y);
@@ -156,20 +297,38 @@ function draw()
 
     for (var i = 0; i < numBalls; i++)
     {
+        if (!balls[i].inPlay)
+            continue;
+
+
         //adding friction
         balls[i].vel.mult(FRICTION);
+
+        if (balls[i].vel.mag() <= VELOCITY_DEADZONE)
+        {
+            balls[i].vel = createVector();
+        }
+
         balls[i].pos.add(balls[i].vel);
         
         for (var j = i + 1; j < numBalls; j++)
         {
+            if (!balls[j].inPlay)
+                continue;
+
             handleCollision(balls[i], balls[j], RESTITUTION);
         }
 
         handleWallCollision(balls[i]);
+
+        checkInPocket(balls[i]);
     }
 
     for (var i = 0; i < numBalls; i++)
     {
+        if (!balls[i].inPlay)
+            continue;
+
         fill(ballColors[i]);
 
         circle(balls[i].pos.x, balls[i].pos.y, balls[i].radius*2);
@@ -183,6 +342,17 @@ function draw()
             arc(balls[i].pos.x, balls[i].pos.y, balls[i].radius*2, balls[i].radius*2, 0.5+PI, PI*2-0.5, OPEN);
         }
     }
+
+
+    checkScore();
+    text("Player 1: " + player1Score + " Player 2: " + player2Score, 0, 10);
+
+    turn = player1Turn ? "Player 1" : "Player 2"
+
+    text("it is " + turn + "'s turn", 200, 10);
+ 
+    if (checkEndTurn() && turnInProgress)
+        endTurn();
 }
 
 
@@ -197,9 +367,16 @@ function mouseReleased()
 {
     mouseIsDragged = false;
 
-    mouseUpPos = createVector(mouseX, mouseY);
+    if (!turnInProgress)
+    {
+        turnInProgress = true;
 
-    newVel = p5.Vector.sub(mouseDownPos, mouseUpPos);
+        mouseUpPos = createVector(mouseX, mouseY);
 
-    balls[15].vel = p5.Vector.mult(newVel, DRAG_FACTOR);
+        newVel = p5.Vector.sub(mouseDownPos, mouseUpPos);
+
+        balls[15].vel = p5.Vector.mult(newVel, DRAG_FACTOR);
+    }
+
+    
 }

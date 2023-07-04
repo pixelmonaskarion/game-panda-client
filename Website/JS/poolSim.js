@@ -60,6 +60,8 @@ player1Turn;
 
 turnInProgress;
 
+anotherTurn;
+
 
 function setup()
 {
@@ -118,6 +120,8 @@ function setup()
     player1Solid = null;
 
     turnInProgress = false;
+
+    anotherTurn = false;
 
     createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
     background(0);
@@ -191,7 +195,7 @@ function checkInPocket(ball)
                 console.log(player + " lost");
             }
 
-            if (ball.index <= 6 & player1Solid == null && player1Turn)
+            if (ball.index <= 6 && player1Solid == null && player1Turn)
             {
                 player1Solid = true;
                 console.log("Player 1 is solid");
@@ -201,7 +205,7 @@ function checkInPocket(ball)
                 console.log("Player 1 is striped");
             }
 
-            if (ball.index <= 6 & player1Solid == null && !player1Turn)
+            if (ball.index <= 6 && player1Solid == null && !player1Turn)
             {
                 player1Solid = false;
                 console.log("Player 1 is striped");
@@ -209,6 +213,21 @@ function checkInPocket(ball)
             {
                 player1Solid = true;
                 console.log("Player 1 is solid");
+            }
+
+
+            if (ball.index <= 6 && player1Solid == true && player1Turn)
+            {
+                anotherTurn= true;
+            } else if (ball.index <= 6 && player1Solid == false && !player1Turn)
+            {
+                anotherTurn= true;
+            } else if (ball.index >= 8 && ball.index <= 14 && player1Solid == false && player1Turn)
+            {
+                anotherTurn= true;
+            } else if (ball.index >= 8 && ball.index <= 14 && player1Solid == true && !player1Turn)
+            {
+                anotherTurn= true;
             }
 
             return;
@@ -268,7 +287,10 @@ function endTurn()
 {
     turnInProgress = false;
 
-    player1Turn = !player1Turn;
+    if (!anotherTurn)
+        player1Turn = !player1Turn;
+
+    anotherTurn = false;
     console.log("turn is over, player1Turn: " + player1Turn);
 }
 

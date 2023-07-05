@@ -64,6 +64,9 @@ anotherTurn;
 
 popupText;
 
+whiteBallPocketed;
+placingWhiteBall;
+
 
 function setup()
 {
@@ -126,6 +129,9 @@ function setup()
     anotherTurn = false;
 
     popupText = "";
+
+    whiteBallPocketed = false;
+    placingWhiteBall = false;
 
     createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
     background(0);
@@ -213,6 +219,12 @@ function checkInPocket(ball)
                     player = player1Turn ? "Player 1" : "Player 2";
                     popup(player + " won");
                 }
+            }
+
+            if (ball.index == 15)
+            {
+                whiteBallPocketed = true;
+                popup("White Ball Pocketed");
             }
 
             if (ball.index <= 6 && player1Solid == null && player1Turn)
@@ -303,6 +315,12 @@ function checkEndTurn()
     return true;
 }
 
+function placeWhiteBall()
+{
+    balls[15].inPlay = true;
+    balls[15].pos = createVector(mouseX, mouseY);
+}
+
 function endTurn()
 {
     turnInProgress = false;
@@ -315,6 +333,11 @@ function endTurn()
 
     turn = player1Turn ? "Player 1" : "Player 2";
     popup("It is " + turn + "'s turn");
+
+    if (whiteBallPocketed) {
+        whiteBallPocketed = false;
+        placingWhiteBall = true;
+    }
 }
 
 function draw()
@@ -328,6 +351,9 @@ function draw()
     stroke(0);
     textAlign(CENTER, CENTER);
     text(popupText, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+
+    if (placingWhiteBall)
+        placeWhiteBall();
 
     
     for (var i = 0; i < pocketPositions.length; i++)
@@ -344,34 +370,35 @@ function draw()
         stroke(0);
     }
     
-
-    for (var i = 0; i < numBalls; i++)
-    {
-        if (!balls[i].inPlay)
-            continue;
-
-
-        //adding friction
-        balls[i].vel.mult(FRICTION);
-
-        if (balls[i].vel.mag() <= VELOCITY_DEADZONE)
+    if (!placingWhiteBall) {
+        for (var i = 0; i < numBalls; i++)
         {
-            balls[i].vel = createVector();
-        }
-
-        balls[i].pos.add(balls[i].vel);
-        
-        for (var j = i + 1; j < numBalls; j++)
-        {
-            if (!balls[j].inPlay)
+            if (!balls[i].inPlay)
                 continue;
 
-            handleCollision(balls[i], balls[j], RESTITUTION);
+
+            //adding friction
+            balls[i].vel.mult(FRICTION);
+
+            if (balls[i].vel.mag() <= VELOCITY_DEADZONE)
+            {
+                balls[i].vel = createVector();
+            }
+
+            balls[i].pos.add(balls[i].vel);
+            
+            for (var j = i + 1; j < numBalls; j++)
+            {
+                if (!balls[j].inPlay)
+                    continue;
+
+                handleCollision(balls[i], balls[j], RESTITUTION);
+            }
+
+            handleWallCollision(balls[i]);
+
+            checkInPocket(balls[i]);
         }
-
-        handleWallCollision(balls[i]);
-
-        checkInPocket(balls[i]);
     }
 
     for (var i = 0; i < numBalls; i++)
@@ -395,11 +422,19 @@ function draw()
 
 
     checkScore();
-    text("Player 1: " + player1Score + " Player 2: " + player2Score, 0, 10);
+    textAlign(LEFT);
+    text("Player 1: " + player1Score + "   Player 2: " + player2Score, 10, 10);
 
     turn = player1Turn ? "Player 1" : "Player 2"
 
-    text("it is " + turn + "'s turn", 200, 10);
+    if (player1Turn && player1Solid != null)
+        type = player1Solid ? "Solid" : "Striped";
+    else if (!player1Turn && player1Solid != null)
+        type = player1Solid ? "Striped" : "Solid";
+    else
+        type = "Neither";
+
+    text("it is " + turn + "'s turn      " + type, 200, 10);
  
     if (checkEndTurn() && turnInProgress)
         endTurn();
@@ -411,6 +446,7 @@ function mousePressed()
 {
     mouseDownPos = createVector(mouseX, mouseY);
     mouseIsDragged = true;
+    placingWhiteBall = false;
 }
 
 function mouseReleased()

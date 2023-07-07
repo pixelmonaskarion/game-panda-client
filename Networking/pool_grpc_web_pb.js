@@ -8,7 +8,7 @@
 // versions:
 // 	protoc-gen-grpc-web v1.4.2
 // 	protoc              v3.20.3
-// source: pool.proto
+// source: Networking/pool.proto
 
 
 /* eslint-disable */
@@ -19,6 +19,8 @@
 const grpc = {};
 grpc.web = require('grpc-web');
 
+
+var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js')
 const proto = {};
 proto.pool = require('./pool_pb.js');
 
@@ -30,7 +32,7 @@ proto.pool = require('./pool_pb.js');
  * @struct
  * @final
  */
-proto.pool.HelloWorldClient =
+proto.pool.PoolGameClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'text';
@@ -56,7 +58,7 @@ proto.pool.HelloWorldClient =
  * @struct
  * @final
  */
-proto.pool.HelloWorldPromiseClient =
+proto.pool.PoolGamePromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'text';
@@ -77,61 +79,488 @@ proto.pool.HelloWorldPromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.pool.HelloRequest,
- *   !proto.pool.HelloResponse>}
+ *   !proto.google.protobuf.Empty,
+ *   !proto.pool.RoomCreation>}
  */
-const methodDescriptor_HelloWorld_Hello = new grpc.web.MethodDescriptor(
-  '/pool.HelloWorld/Hello',
+const methodDescriptor_PoolGame_CreateRoom = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/CreateRoom',
   grpc.web.MethodType.UNARY,
-  proto.pool.HelloRequest,
-  proto.pool.HelloResponse,
+  google_protobuf_empty_pb.Empty,
+  proto.pool.RoomCreation,
   /**
-   * @param {!proto.pool.HelloRequest} request
+   * @param {!proto.google.protobuf.Empty} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.pool.HelloResponse.deserializeBinary
+  proto.pool.RoomCreation.deserializeBinary
 );
 
 
 /**
- * @param {!proto.pool.HelloRequest} request The
+ * @param {!proto.google.protobuf.Empty} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.pool.HelloResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.pool.RoomCreation)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.pool.HelloResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.pool.RoomCreation>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.pool.HelloWorldClient.prototype.hello =
+proto.pool.PoolGameClient.prototype.createRoom =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/pool.HelloWorld/Hello',
+      '/pool.PoolGame/CreateRoom',
       request,
       metadata || {},
-      methodDescriptor_HelloWorld_Hello,
+      methodDescriptor_PoolGame_CreateRoom,
       callback);
 };
 
 
 /**
- * @param {!proto.pool.HelloRequest} request The
+ * @param {!proto.google.protobuf.Empty} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.pool.HelloResponse>}
+ * @return {!Promise<!proto.pool.RoomCreation>}
  *     Promise that resolves to the response
  */
-proto.pool.HelloWorldPromiseClient.prototype.hello =
+proto.pool.PoolGamePromiseClient.prototype.createRoom =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/pool.HelloWorld/Hello',
+      '/pool.PoolGame/CreateRoom',
       request,
       metadata || {},
-      methodDescriptor_HelloWorld_Hello);
+      methodDescriptor_PoolGame_CreateRoom);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.RoomID,
+ *   !proto.pool.RoomJoin>}
+ */
+const methodDescriptor_PoolGame_JoinRoom = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/JoinRoom',
+  grpc.web.MethodType.UNARY,
+  proto.pool.RoomID,
+  proto.pool.RoomJoin,
+  /**
+   * @param {!proto.pool.RoomID} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.pool.RoomJoin.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.pool.RoomJoin)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.pool.RoomJoin>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.joinRoom =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/JoinRoom',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_JoinRoom,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.pool.RoomJoin>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.joinRoom =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/JoinRoom',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_JoinRoom);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.RoomID,
+ *   !proto.pool.Room>}
+ */
+const methodDescriptor_PoolGame_GetRoom = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/GetRoom',
+  grpc.web.MethodType.UNARY,
+  proto.pool.RoomID,
+  proto.pool.Room,
+  /**
+   * @param {!proto.pool.RoomID} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.pool.Room.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.pool.Room)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.pool.Room>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.getRoom =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/GetRoom',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_GetRoom,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.pool.Room>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.getRoom =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/GetRoom',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_GetRoom);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.AuthedPlayer,
+ *   !proto.google.protobuf.Empty>}
+ */
+const methodDescriptor_PoolGame_SetPlayerInfo = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/SetPlayerInfo',
+  grpc.web.MethodType.UNARY,
+  proto.pool.AuthedPlayer,
+  google_protobuf_empty_pb.Empty,
+  /**
+   * @param {!proto.pool.AuthedPlayer} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  google_protobuf_empty_pb.Empty.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.AuthedPlayer} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.setPlayerInfo =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/SetPlayerInfo',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_SetPlayerInfo,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.AuthedPlayer} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.google.protobuf.Empty>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.setPlayerInfo =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/SetPlayerInfo',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_SetPlayerInfo);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.RoomID,
+ *   !proto.pool.GameState>}
+ */
+const methodDescriptor_PoolGame_GetGameState = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/GetGameState',
+  grpc.web.MethodType.UNARY,
+  proto.pool.RoomID,
+  proto.pool.GameState,
+  /**
+   * @param {!proto.pool.RoomID} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.pool.GameState.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.pool.GameState)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.pool.GameState>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.getGameState =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/GetGameState',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_GetGameState,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.pool.GameState>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.getGameState =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/GetGameState',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_GetGameState);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.Turn,
+ *   !proto.google.protobuf.Empty>}
+ */
+const methodDescriptor_PoolGame_PostTurn = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/PostTurn',
+  grpc.web.MethodType.UNARY,
+  proto.pool.Turn,
+  google_protobuf_empty_pb.Empty,
+  /**
+   * @param {!proto.pool.Turn} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  google_protobuf_empty_pb.Empty.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.Turn} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.postTurn =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/PostTurn',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_PostTurn,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.Turn} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.google.protobuf.Empty>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.postTurn =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/PostTurn',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_PostTurn);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.RoomID,
+ *   !proto.pool.WinState>}
+ */
+const methodDescriptor_PoolGame_CheckWinState = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/CheckWinState',
+  grpc.web.MethodType.UNARY,
+  proto.pool.RoomID,
+  proto.pool.WinState,
+  /**
+   * @param {!proto.pool.RoomID} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.pool.WinState.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.pool.WinState)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.pool.WinState>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.checkWinState =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/CheckWinState',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_CheckWinState,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.pool.WinState>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.checkWinState =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/CheckWinState',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_CheckWinState);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.RoomID,
+ *   !proto.pool.Turn>}
+ */
+const methodDescriptor_PoolGame_GetPreviousTurn = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/GetPreviousTurn',
+  grpc.web.MethodType.UNARY,
+  proto.pool.RoomID,
+  proto.pool.Turn,
+  /**
+   * @param {!proto.pool.RoomID} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.pool.Turn.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.pool.Turn)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.pool.Turn>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.getPreviousTurn =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/GetPreviousTurn',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_GetPreviousTurn,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.RoomID} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.pool.Turn>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.getPreviousTurn =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/GetPreviousTurn',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_GetPreviousTurn);
 };
 
 

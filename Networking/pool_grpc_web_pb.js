@@ -8,7 +8,7 @@
 // versions:
 // 	protoc-gen-grpc-web v1.4.2
 // 	protoc              v3.20.3
-// source: Networking/pool.proto
+// source: pool.proto
 
 
 /* eslint-disable */
@@ -262,11 +262,72 @@ proto.pool.PoolGamePromiseClient.prototype.getRoom =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.pool.AuthedPlayer,
+ *   !proto.pool.SetPlayerInfoReq,
  *   !proto.google.protobuf.Empty>}
  */
 const methodDescriptor_PoolGame_SetPlayerInfo = new grpc.web.MethodDescriptor(
   '/pool.PoolGame/SetPlayerInfo',
+  grpc.web.MethodType.UNARY,
+  proto.pool.SetPlayerInfoReq,
+  google_protobuf_empty_pb.Empty,
+  /**
+   * @param {!proto.pool.SetPlayerInfoReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  google_protobuf_empty_pb.Empty.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.pool.SetPlayerInfoReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.google.protobuf.Empty)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.pool.PoolGameClient.prototype.setPlayerInfo =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/pool.PoolGame/SetPlayerInfo',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_SetPlayerInfo,
+      callback);
+};
+
+
+/**
+ * @param {!proto.pool.SetPlayerInfoReq} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.google.protobuf.Empty>}
+ *     Promise that resolves to the response
+ */
+proto.pool.PoolGamePromiseClient.prototype.setPlayerInfo =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/pool.PoolGame/SetPlayerInfo',
+      request,
+      metadata || {},
+      methodDescriptor_PoolGame_SetPlayerInfo);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.pool.AuthedPlayer,
+ *   !proto.google.protobuf.Empty>}
+ */
+const methodDescriptor_PoolGame_StartGame = new grpc.web.MethodDescriptor(
+  '/pool.PoolGame/StartGame',
   grpc.web.MethodType.UNARY,
   proto.pool.AuthedPlayer,
   google_protobuf_empty_pb.Empty,
@@ -291,13 +352,13 @@ const methodDescriptor_PoolGame_SetPlayerInfo = new grpc.web.MethodDescriptor(
  * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.pool.PoolGameClient.prototype.setPlayerInfo =
+proto.pool.PoolGameClient.prototype.startGame =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/pool.PoolGame/SetPlayerInfo',
+      '/pool.PoolGame/StartGame',
       request,
       metadata || {},
-      methodDescriptor_PoolGame_SetPlayerInfo,
+      methodDescriptor_PoolGame_StartGame,
       callback);
 };
 
@@ -310,13 +371,13 @@ proto.pool.PoolGameClient.prototype.setPlayerInfo =
  * @return {!Promise<!proto.google.protobuf.Empty>}
  *     Promise that resolves to the response
  */
-proto.pool.PoolGamePromiseClient.prototype.setPlayerInfo =
+proto.pool.PoolGamePromiseClient.prototype.startGame =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/pool.PoolGame/SetPlayerInfo',
+      '/pool.PoolGame/StartGame',
       request,
       metadata || {},
-      methodDescriptor_PoolGame_SetPlayerInfo);
+      methodDescriptor_PoolGame_StartGame);
 };
 
 

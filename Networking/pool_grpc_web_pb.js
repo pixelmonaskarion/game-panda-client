@@ -262,16 +262,16 @@ proto.pool.PoolGamePromiseClient.prototype.getRoom =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.pool.SetPlayerInfoReq,
+ *   !proto.pool.AuthedPlayerInRoom,
  *   !proto.google.protobuf.Empty>}
  */
 const methodDescriptor_PoolGame_SetPlayerInfo = new grpc.web.MethodDescriptor(
   '/pool.PoolGame/SetPlayerInfo',
   grpc.web.MethodType.UNARY,
-  proto.pool.SetPlayerInfoReq,
+  proto.pool.AuthedPlayerInRoom,
   google_protobuf_empty_pb.Empty,
   /**
-   * @param {!proto.pool.SetPlayerInfoReq} request
+   * @param {!proto.pool.AuthedPlayerInRoom} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -282,7 +282,7 @@ const methodDescriptor_PoolGame_SetPlayerInfo = new grpc.web.MethodDescriptor(
 
 
 /**
- * @param {!proto.pool.SetPlayerInfoReq} request The
+ * @param {!proto.pool.AuthedPlayerInRoom} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -303,7 +303,7 @@ proto.pool.PoolGameClient.prototype.setPlayerInfo =
 
 
 /**
- * @param {!proto.pool.SetPlayerInfoReq} request The
+ * @param {!proto.pool.AuthedPlayerInRoom} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
@@ -323,16 +323,16 @@ proto.pool.PoolGamePromiseClient.prototype.setPlayerInfo =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.pool.AuthedPlayer,
+ *   !proto.pool.AuthedPlayerInRoom,
  *   !proto.google.protobuf.Empty>}
  */
 const methodDescriptor_PoolGame_StartGame = new grpc.web.MethodDescriptor(
   '/pool.PoolGame/StartGame',
   grpc.web.MethodType.UNARY,
-  proto.pool.AuthedPlayer,
+  proto.pool.AuthedPlayerInRoom,
   google_protobuf_empty_pb.Empty,
   /**
-   * @param {!proto.pool.AuthedPlayer} request
+   * @param {!proto.pool.AuthedPlayerInRoom} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -343,7 +343,7 @@ const methodDescriptor_PoolGame_StartGame = new grpc.web.MethodDescriptor(
 
 
 /**
- * @param {!proto.pool.AuthedPlayer} request The
+ * @param {!proto.pool.AuthedPlayerInRoom} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -364,7 +364,7 @@ proto.pool.PoolGameClient.prototype.startGame =
 
 
 /**
- * @param {!proto.pool.AuthedPlayer} request The
+ * @param {!proto.pool.AuthedPlayerInRoom} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata

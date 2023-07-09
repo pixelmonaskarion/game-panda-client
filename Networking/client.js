@@ -1,4 +1,4 @@
-const {RoomID, SetPlayerInfoReq, AuthedPlayer} = require('./pool_pb.js');
+const {RoomID, AuthedPlayerInRoom, AuthedPlayer} = require('./pool_pb.js');
 const {PoolGameClient} = require('./pool_grpc_web_pb.js');
 import google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb.js'
 
@@ -73,7 +73,7 @@ async function joinRoom(room_id) {
 }
 
 async function setPlayerInfo(room_id, token, player_id, name) {
-	let res = new SetPlayerInfoReq();
+	let res = new AuthedPlayerInRoom();
 	let room_id_proto = new RoomID();
 	room_id_proto.setRoomCode(room_id);
 	res.setRoomId(room_id_proto);

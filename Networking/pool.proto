@@ -7,8 +7,8 @@ service PoolGame {
     rpc CreateRoom(google.protobuf.Empty) returns (RoomCreation) {} //creates a room
     rpc JoinRoom (RoomID) returns (RoomJoin) {} //joins a already created room
     rpc GetRoom(RoomID) returns (Room) {} //gets information about a room
-    rpc SetPlayerInfo (SetPlayerInfoReq) returns (google.protobuf.Empty) {} //sets the info about yourself (auth is needed) i.e. name
-    rpc StartGame(AuthedPlayer) returns (google.protobuf.Empty) {}
+    rpc SetPlayerInfo (AuthedPlayerInRoom) returns (google.protobuf.Empty) {} //sets the info about yourself (auth is needed) i.e. name
+    rpc StartGame(AuthedPlayerInRoom) returns (google.protobuf.Empty) {}
 
     rpc GetGameState(RoomID) returns (GameState) {} //gets current game state 
     rpc PostTurn(Turn) returns (google.protobuf.Empty) {} //posts the moves you made on your turn
@@ -16,7 +16,7 @@ service PoolGame {
     rpc GetPreviousTurn (RoomID) returns (Turn) {} //gets the move made on the previous turn.
 }
 
-message SetPlayerInfoReq {
+message AuthedPlayerInRoom {
     RoomID room_id = 1;
     AuthedPlayer authed_player = 2;
 }
@@ -68,8 +68,8 @@ message GameState {
     repeated int32 scores = 2; //array of player scores
     //whether p1 is using solid or striped balls
     //0: not chosen yet
-    //1: solid
-    //2: striped
+    //1: striped
+    //2: solid
     int32 p1_solid = 3; 
     bool p1_turn = 4;
 }
